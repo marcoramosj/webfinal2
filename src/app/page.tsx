@@ -1,5 +1,7 @@
+"use client";
+
 import { useState } from "react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation"; // 👈🏻 CORRECTO en App Router
 
 interface LoginResponse {
   success: boolean;
@@ -8,17 +10,18 @@ interface LoginResponse {
   mensaje?: string;
 }
 
-export default function LoginPage() {
+export default function Home() {
   const [usuario, setUsuario] = useState("");
   const [contraseña, setContraseña] = useState("");
   const [mensaje, setMensaje] = useState("");
+
   const router = useRouter();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
 
     try {
-      const response = await fetch("/api/login", {
+      const response = await fetch("http://localhost:3001/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -29,10 +32,9 @@ export default function LoginPage() {
       const data: LoginResponse = await response.json();
 
       if (data.success) {
-        // Guardamos datos y redirigimos
-        localStorage.setItem('nombreCompleto', data.nombreCompleto || '');
-        localStorage.setItem('boleto', data.boleto || '');
-        router.push("/welcome");
+        setMensaje(`Bienvenido, ${data.nombreCompleto}, disfruta tu experiencia en GreenPark.`);
+        // Si quieres redirigir a otra página (opcional):
+        // router.push("/bienvenida");
       } else {
         setMensaje(data.mensaje || "Datos incorrectos, intenta de nuevo.");
       }
@@ -75,10 +77,11 @@ export default function LoginPage() {
       </form>
 
       {mensaje && (
-        <div style={{ marginTop: "20px", fontSize: "18px", color: "red" }}>
+        <div style={{ marginTop: "20px", fontSize: "18px" }}>
           {mensaje}
         </div>
       )}
     </div>
   );
 }
+
