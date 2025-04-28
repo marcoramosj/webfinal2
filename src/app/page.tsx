@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation"; // 👈🏻 CORRECTO en App Router
+import { useRouter } from "next/navigation";
 
 interface LoginResponse {
   success: boolean;
@@ -32,9 +32,8 @@ export default function Home() {
       const data: LoginResponse = await response.json();
 
       if (data.success) {
-        setMensaje(`Bienvenido, ${data.nombreCompleto}, disfruta tu experiencia en GreenPark.`);
-        // Si quieres redirigir a otra página (opcional):
-        // router.push("/bienvenida");
+        // Redirige automáticamente a /bienvenida
+        router.push("/bienvenida");
       } else {
         setMensaje(data.mensaje || "Datos incorrectos, intenta de nuevo.");
       }
@@ -77,11 +76,10 @@ export default function Home() {
       </form>
 
       {mensaje && (
-        <div style={{ marginTop: "20px", fontSize: "18px" }}>
+        <div style={{ marginTop: "20px", fontSize: "18px", color: "red" }}>
           {mensaje}
         </div>
       )}
     </div>
   );
 }
-
